@@ -235,7 +235,7 @@
         const OFFSET_MSK = 10800000;
 
         const TARGET_BOSSES = [
-            "Glukhar", "Kaban", "Killa", "Knight", "Big Pipe", "Birdeye", "Kollontay", "Partisan", "Reshala", "Sanitar", "Shturman", "Tagilla"
+            "Glukhar", "Kaban", "Killa", "Knight", "Big Pipe", "Birdeye", "Kollontay", "Partisan", "Reshala", "Sanitar", "Shturman", "Tagilla", "Cultist Priest"
         ];
 
         async function fetchBossData() {
@@ -266,12 +266,17 @@
                 map.bosses.forEach(sb => {
                     let name = sb.boss.name;
                     let displayName = name;
-                    let wikiName = name;
+                    let wikiName = name.replace(/ /g, '_');
+                    
                     if (["Knight", "Big Pipe", "Birdeye"].includes(name)) {
                         displayName = "The Goons";
                         wikiName = "The_Goons";
+                    } else if (name === "Cultist Priest") {
+                        displayName = "Cultistas";
+                        wikiName = "Cultist_Priest";
                     }
-                    if (!TARGET_BOSSES.includes(name) && displayName !== "The Goons") return;
+                    
+                    if (!TARGET_BOSSES.includes(name) && displayName !== "The Goons" && displayName !== "Cultistas") return;
 
                     if (!bossMap[displayName]) {
                         const meta = bossesMeta.find(m => m.name === name) || {};
