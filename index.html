@@ -157,6 +157,7 @@
             opacity: 0.7;
             transition: var(--transition);
         }
+        .boss-avatar.dual { width: 50%; }
         .boss-card:hover .boss-avatar { opacity: 1; filter: grayscale(0); }
 
         /* Clocks */
@@ -274,18 +275,25 @@
                     } else if (name === "Cultist Priest") {
                         displayName = "Cultistas";
                         wikiName = "Cultist_Priest";
+                    } else if (["Kaban", "Kollontay"].includes(name)) {
+                        displayName = "Kaban & Kollontay";
+                        wikiName = "Kaban"; // Secondary is Kollontay
                     }
                     
-                    if (!TARGET_BOSSES.includes(name) && displayName !== "The Goons" && displayName !== "Cultistas") return;
+                    if (!TARGET_BOSSES.includes(name) && !["The Goons", "Cultistas", "Kaban & Kollontay"].includes(displayName)) return;
 
                     if (!bossMap[displayName]) {
                         const meta = bossesMeta.find(m => m.name === name) || {};
                         bossMap[displayName] = { 
                             name: displayName, 
                             wiki: `https://escapefromtarkov.fandom.com/wiki/${wikiName}`,
-                            img: meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`,
+                            imgs: [meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`],
                             spawns: [] 
                         };
+                    } else if (["Kaban & Kollontay"].includes(displayName)) {
+                        const meta = bossesMeta.find(m => m.name === name) || {};
+                        const img = meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`;
+                        if (!bossMap[displayName].imgs.includes(img)) bossMap[displayName].imgs.push(img);
                     }
                     if (!bossMap[displayName].spawns.find(s => s.mapName === map.name)) {
                         bossMap[displayName].spawns.push({ mapName: map.name, chance: sb.spawnChance });
@@ -309,13 +317,15 @@
                     </div>
                 `).join('');
 
+                let imgHTML = boss.imgs.map(img => `<img src="${img}" class="boss-avatar ${boss.imgs.length > 1 ? 'dual' : ''}" loading="lazy">`).join('');
+
                 link.innerHTML = `
                     <div class="boss-card">
                         <div>
                             <div class="boss-name">${boss.name}</div>
                             <div class="spawn-list">${spawnsHTML}</div>
                         </div>
-                        <img src="${boss.img}" class="boss-avatar" loading="lazy">
+                        <div style="display:flex; ${boss.imgs.length > 1 ? 'gap:2px;' : ''}">${imgHTML}</div>
                     </div>
                 `;
                 container.appendChild(link);
