@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Pulse - Dashboard 100vh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020617;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --accent-color: #38bdf8;
+            --highlight-color: #22c55e;
+            --text-primary: #f8fafc;
+            --text-secondary: #64748b;
+            --brasil-glow: rgba(34, 197, 94, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(34, 197, 94, 0.03) 0%, transparent 50%);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5vh 2vw;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2vh;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .dashboard {
+            flex: 1;
+            display: grid;
+            grid-template-areas: 
+                "hero hero hero hero"
+                "c1 c2 c3 c4"
+                "c5 c6 c7 .";
+            grid-template-rows: 1.2fr 1fr 1fr;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5vh;
+            max-width: 1400px;
+            margin: 10px auto;
+            width: 100%;
+        }
+
+        .card.highlight {
+            grid-area: hero;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(15, 23, 42, 0.6));
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            box-shadow: 0 10px 40px -10px var(--brasil-glow);
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 0 4vh;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 1vh;
+        }
+
+        .highlight .time-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .highlight .time {
+            font-size: 5rem;
+            color: var(--highlight-color);
+            text-shadow: 0 0 20px var(--brasil-glow);
+        }
+
+        .highlight .label-group {
+            text-align: left;
+        }
+
+        .region-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
+        }
+
+        .city-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .time {
+            font-size: 2.2rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            margin: 0.5vh 0;
+        }
+
+        .date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .multi-labels {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+
+        .label-box {
+            background: rgba(255, 255, 255, 0.03);
+            width: 90%;
+            padding: 4px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-areas: 
+                    "hero hero"
+                    "c1 c2"
+                    "c3 c4"
+                    "c5 c6"
+                    "c7 .";
+                overflow-y: auto;
+            }
+            body { height: auto; overflow: visible; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Global Pulse</h1>
+    </header>
+
+    <div class="dashboard">
+        <div class="card highlight" style="grid-area: hero;" data-tz="America/Sao_Paulo">
+            <div class="label-group">
+                <div class="region-label">BRASIL</div>
+                <div class="city-name">Brasília</div>
+            </div>
+            <div class="time-container">
+                <div class="time">--:--:--</div>
+                <div class="date">--/--/----</div>
+            </div>
+            <div style="width: 100px;"></div>
+        </div>
+
+        <div class="card" style="grid-area: c1;" data-tz="Europe/London">
+            <div class="multi-labels">
+                <div class="label-box">
+                    <div class="region-label">Europe West</div>
+                    <div class="city-name">Londres</div>
+                </div>
+                <div class="label-box">
+                    <div class="region-label">Nigéria</div>
+                    <div class="city-name">Abuja</div>
+                </div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c2;" data-tz="America/Bogota">
+            <div class="multi-labels">
+                <div class="label-box">
+                    <div class="region-label">Colômbia</div>
+                    <div class="city-name">Bogotá</div>
+                </div>
+                <div class="label-box">
+                    <div class="region-label">América Central</div>
+                    <div class="city-name">Panamá</div>
+                </div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c3;" data-tz="America/New_York">
+            <div class="multi-labels">
+                <div class="label-box">
+                    <div class="region-label">North East</div>
+                    <div class="city-name">New York</div>
+                </div>
+                <div class="label-box">
+                    <div class="region-label">NA-SE</div>
+                    <div class="city-name">Miami</div>
+                </div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c4;" data-tz="America/Mexico_City">
+            <div class="region-label">México</div>
+            <div class="city-name">Cidade do México</div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c5;" data-tz="Africa/Cairo">
+            <div class="region-label">África</div>
+            <div class="city-name">Cairo</div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c6;" data-tz="America/Los_Angeles">
+            <div class="region-label">West</div>
+            <div class="city-name">Los Angeles</div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <div class="card" style="grid-area: c7;" data-tz="Europe/Moscow">
+            <div class="region-label">Rússia</div>
+            <div class="city-name">Moscou</div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+    </div>
+
+    <script>
+        function updateClocks() {
+            const now = new Date();
+            document.querySelectorAll('.card').forEach(card => {
+                const tz = card.dataset.tz;
+                const isHighlight = card.classList.contains('highlight');
+                
+                const timeStr = now.toLocaleTimeString('pt-BR', {
+                    timeZone: tz,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: isHighlight ? '2-digit' : undefined,
+                    hour12: false
+                });
+
+                const dateStr = now.toLocaleDateString('pt-BR', {
+                    timeZone: tz,
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: isHighlight ? 'numeric' : undefined
+                });
+
+                card.querySelector('.time').textContent = timeStr;
+                card.querySelector('.date').textContent = dateStr;
+            });
+        }
+
+        setInterval(updateClocks, 1000);
+        updateClocks();
+    </script>
+</body>
+</html>
