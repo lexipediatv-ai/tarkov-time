@@ -352,11 +352,11 @@
 
         async function fetchBossData() {
             const query = `{
-                bosses {
+                maps {
                     name
-                    spawnChances {
-                        map { name }
-                        chance
+                    bosses {
+                        boss { name }
+                        spawnChance
                     }
                 }
             }`;
@@ -368,34 +368,36 @@
                     body: JSON.stringify({ query })
                 });
                 const result = await response.json();
-                renderBosses(result.data.bosses);
+                if (result.data && result.data.maps) {
+                    renderBosses(result.data.maps);
+                } else {
+                    throw new Error("Invalid API response structure");
+                }
             } catch (error) {
                 console.error("Failed to fetch Tarkov data:", error);
                 document.getElementById('boss-container').innerHTML = `<div style="padding:20px; color:var(--accent-alert); font-size:0.6rem;">COMMUNICATIONS JAMMED</div>`;
             }
         }
 
-        function renderBosses(allBosses) {
+        function renderBosses(mapsData) {
             const container = document.getElementById('boss-container');
             container.innerHTML = '';
 
-            // Filter for bosses we want and process Knight differently (The Goons)
-            const filtered = allBosses.filter(b => TARGET_BOSSES.includes(b.name));
-            
-            // Map names for the UI
             const bossMap = {};
-            filtered.forEach(b => {
-                let name = b.name;
-                if (["Knight", "Big Pipe", "Birdeye"].includes(name)) name = "The Goons";
-                
-                if (!bossMap[name]) {
-                    bossMap[name] = { name, maps: new Set(), maxChance: 0 };
-                }
-                
-                b.spawnChances.forEach(sc => {
-                    bossMap[name].maps.add(sc.map.name);
-                    if (sc.chance > bossMap[name].maxChance) {
-                        bossMap[name].maxChance = sc.chance;
+
+            mapsData.forEach(map => {
+                map.bosses.forEach(sb => {
+                    let name = sb.boss.name;
+                    if (["Knight", "Big Pipe", "Birdeye"].includes(name)) name = "The Goons";
+                    if (!TARGET_BOSSES.includes(name)) return;
+
+                    if (!bossMap[name]) {
+                        bossMap[name] = { name, maps: new Set(), maxChance: 0 };
+                    }
+                    
+                    bossMap[name].maps.add(map.name);
+                    if (sb.spawnChance > bossMap[name].maxChance) {
+                        bossMap[name].maxChance = sb.spawnChance;
                     }
                 });
             });
