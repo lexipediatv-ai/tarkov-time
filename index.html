@@ -287,8 +287,13 @@
                     }
 
                     const meta = bossesMeta.find(m => m.name === name) || {};
-                    const img = meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`;
-                    const wiki = `https://escapefromtarkov.fandom.com/wiki/${name.replace(/ /g, '_')}`;
+                    let img = meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`;
+                    let wiki = `https://escapefromtarkov.fandom.com/wiki/${name.replace(/ /g, '_')}`;
+
+                    if (displayName === "The Goons") {
+                        img = "https://i.redd.it/8m0b36togbeg1.jpeg";
+                        wiki = "https://escapefromtarkov.fandom.com/wiki/The_Goons";
+                    }
 
                     if (!bossMap[displayName].profiles.find(p => p.img === img)) {
                         bossMap[displayName].profiles.push({ img, wiki });
