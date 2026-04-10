@@ -59,15 +59,24 @@
 
         /* Sidebar Style */
         .sidebar {
-            width: 260px;
+            width: 280px;
             background: rgba(5, 5, 5, 0.9);
             border-right: 1px solid var(--card-border);
             height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 2vh 1.5vw;
+            padding: 2vh 1.2vw;
             z-index: 100;
             backdrop-filter: blur(10px);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2vh;
+            padding-bottom: 1vh;
+            border-bottom: 1px solid var(--text-muted);
         }
 
         .sidebar-title {
@@ -77,9 +86,29 @@
             color: var(--accent-primary);
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            margin-bottom: 2vh;
-            padding-bottom: 1vh;
-            border-bottom: 1px solid var(--text-muted);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.5rem;
+            font-weight: 800;
+            color: var(--accent-warning);
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-warning);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .boss-list {
@@ -88,14 +117,23 @@
             padding-right: 5px;
         }
 
-        .boss-list::-webkit-scrollbar { width: 3px; }
-        .boss-list::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+        .boss-list::-webkit-scrollbar { width: 2px; }
+        .boss-list::-webkit-scrollbar-thumb { background: var(--text-muted); }
 
         .boss-item {
-            margin-bottom: 1.5vh;
+            margin-bottom: 2vh;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .boss-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
         }
 
         .boss-info {
@@ -105,30 +143,44 @@
         }
 
         .boss-name {
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.7rem;
+            font-weight: 800;
             color: var(--foreground);
             text-transform: uppercase;
         }
 
         .boss-pct {
             font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--accent-warning);
+            font-weight: 900;
+            color: var(--accent-primary);
         }
 
         .spawn-bar {
             width: 100%;
-            height: 3px;
+            height: 2px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 2px;
-            overflow: hidden;
+            margin: 4px 0;
         }
 
         .spawn-progress {
             height: 100%;
             background: var(--accent-primary);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .boss-maps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .map-tag {
+            font-size: 0.5rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            padding: 2px 6px;
+            border-radius: 2px;
+            text-transform: uppercase;
         }
 
         /* Main Content */
@@ -204,7 +256,6 @@
             filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
         }
 
-        .multi-group { display: flex; flex-direction: column; gap: 4px; }
         .sub-loc { display: flex; flex-direction: column; border-left: 2px solid var(--text-muted); padding-left: 8px; }
 
         .tarkov-card { border-color: rgba(245, 158, 11, 0.2); }
@@ -222,14 +273,10 @@
         .tarkov-item .time { font-size: 1.5rem; }
         .tarkov-item .status { font-size: 0.5rem; font-weight: 900; color: var(--accent-secondary); }
 
-        @media (max-width: 1400px) {
-            .sidebar { width: 220px; }
-        }
-
+        @media (max-width: 1400px) { .sidebar { width: 240px; } }
         @media (max-width: 1100px) {
             body { flex-direction: column; overflow-y: auto; }
             .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--card-border); }
-            .app-container { height: 100vh; }
             .dashboard { grid-template-columns: repeat(2, 1fr); grid-template-areas: "hero hero" "c1 c2" "c3 c4" "c5 c6" "c7 c8"; grid-template-rows: auto; }
         }
     </style>
@@ -237,120 +284,51 @@
 <body>
 
     <div class="sidebar">
-        <div class="sidebar-title">Boss Intel / Spawn</div>
-        <div class="boss-list">
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Glukhar</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Kaban</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Killa</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">The Goons</span><span class="boss-pct">30%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 30%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Kollontay</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Partisan</span><span class="boss-pct">20%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 20%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Reshala</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Sanitar</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Shturman</span><span class="boss-pct">75%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 75%;"></div></div>
-            </div>
-            <div class="boss-item">
-                <div class="boss-info"><span class="boss-name">Tagilla</span><span class="boss-pct">50%</span></div>
-                <div class="spawn-bar"><div class="spawn-progress" style="width: 50%;"></div></div>
-            </div>
+        <div class="sidebar-header">
+            <div class="sidebar-title">Boss Intel</div>
+            <div class="live-indicator"><div class="live-dot"></div><span>LIVE API</span></div>
+        </div>
+        <div class="boss-list" id="boss-container">
+            <div style="padding: 20px; text-align: center; color: var(--text-secondary); font-size: 0.6rem;">Loading tactical data...</div>
         </div>
     </div>
 
     <div class="app-container">
-        <div class="hero-bg">
-            <div class="center-glow"></div>
-        </div>
-
-        <header>
-            <div class="logo"><span>Global Pulse</span></div>
-        </header>
-
+        <div class="hero-bg"><div class="center-glow"></div></div>
+        <header><div class="logo"><span>Global Pulse</span></div></header>
         <div class="dashboard">
             <div class="card highlight" data-tz="America/Sao_Paulo">
-                <div class="meta">
-                    <div class="label">Priority Sector</div>
-                    <div class="city">BRASÍLIA, BR</div>
-                    <div class="date">--/--/----</div>
-                </div>
+                <div class="meta"><div class="label">Priority Sector</div><div class="city">BRASÍLIA, BR</div><div class="date">--/--/----</div></div>
                 <div class="time">--:--:--</div>
             </div>
-
             <div class="card" style="grid-area: c1;" data-tz="Europe/London">
                 <div class="meta"><div class="label">Europe</div><div class="city">West (London)</div></div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c2;" data-tz="Europe/Berlin">
                 <div class="meta"><div class="label">Europe</div><div class="city">Cen / North / South</div></div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c3;" data-tz="Europe/Bucharest">
-                <div class="multi-group">
-                    <div class="sub-loc"><span class="label">EU East / Africa</span><span class="city">Cai / Buc / Kal</span></div>
-                </div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="sub-loc"><span class="label">EU East / Africa</span><span class="city">Cai / Buc / Kal</span></div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c4;" data-tz="Europe/Moscow">
-                <div class="multi-group">
-                    <div class="sub-loc"><span class="label">Russia</span><span class="city">Central / East</span></div>
-                </div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="sub-loc"><span class="label">Russia</span><span class="city">Central / East</span></div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c5;" data-tz="America/Los_Angeles">
                 <div class="meta"><div class="label">North America</div><div class="city">West Coast</div></div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c6;" data-tz="America/Chicago">
-                <div class="multi-group">
-                    <div class="sub-loc"><span class="label">NA Central / South</span><span class="city">Chicago / Mexico</span></div>
-                </div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="sub-loc"><span class="label">NA Central / South</span><span class="city">Chicago / Mexico</span></div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card" style="grid-area: c7;" data-tz="America/New_York">
-                <div class="multi-group">
-                    <div class="sub-loc"><span class="label">NA North/East / Col</span><span class="city">NYC / Tor / Bog</span></div>
-                </div>
-                <div class="time">--:--</div>
-                <div class="date">--/--</div>
+                <div class="sub-loc"><span class="label">NA North/East / Col</span><span class="city">NYC / Tor / Bog</span></div>
+                <div class="time">--:--</div><div class="date">--/--</div>
             </div>
-
             <div class="card tarkov-card" style="grid-area: c8;">
                 <span class="tarkov-title">Tarkov Engine</span>
                 <div class="tarkov-grid">
@@ -366,6 +344,81 @@
         const MS_IN_DAY = 86400000;
         const OFFSET_MSK = 10800000;
 
+        // BOSS DATA FETCHING
+        const TARGET_BOSSES = [
+            "Glukhar", "Kaban", "Killa", "Knight", "Big Pipe", "Birdeye", 
+            "Kollontay", "Partisan", "Reshala", "Sanitar", "Shturman", "Tagilla"
+        ];
+
+        async function fetchBossData() {
+            const query = `{
+                bosses {
+                    name
+                    spawnChances {
+                        map { name }
+                        chance
+                    }
+                }
+            }`;
+
+            try {
+                const response = await fetch('https://api.tarkov.dev/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                const result = await response.json();
+                renderBosses(result.data.bosses);
+            } catch (error) {
+                console.error("Failed to fetch Tarkov data:", error);
+                document.getElementById('boss-container').innerHTML = `<div style="padding:20px; color:var(--accent-alert); font-size:0.6rem;">COMMUNICATIONS JAMMED</div>`;
+            }
+        }
+
+        function renderBosses(allBosses) {
+            const container = document.getElementById('boss-container');
+            container.innerHTML = '';
+
+            // Filter for bosses we want and process Knight differently (The Goons)
+            const filtered = allBosses.filter(b => TARGET_BOSSES.includes(b.name));
+            
+            // Map names for the UI
+            const bossMap = {};
+            filtered.forEach(b => {
+                let name = b.name;
+                if (["Knight", "Big Pipe", "Birdeye"].includes(name)) name = "The Goons";
+                
+                if (!bossMap[name]) {
+                    bossMap[name] = { name, maps: new Set(), maxChance: 0 };
+                }
+                
+                b.spawnChances.forEach(sc => {
+                    bossMap[name].maps.add(sc.map.name);
+                    if (sc.chance > bossMap[name].maxChance) {
+                        bossMap[name].maxChance = sc.chance;
+                    }
+                });
+            });
+
+            Object.values(bossMap).sort((a,b) => b.maxChance - a.maxChance).forEach(boss => {
+                const pct = Math.round(boss.maxChance * 100);
+                const item = document.createElement('div');
+                item.className = 'boss-item';
+                item.innerHTML = `
+                    <div class="boss-info">
+                        <span class="boss-name">${boss.name}</span>
+                        <span class="boss-pct">${pct}%</span>
+                    </div>
+                    <div class="spawn-bar"><div class="spawn-progress" style="width: ${pct}%"></div></div>
+                    <div class="boss-maps">
+                        ${Array.from(boss.maps).map(m => `<span class="map-tag">${m}</span>`).join('')}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // TIME LOGIC
         function getTarkovTime(isLeftClock = true) {
             const now = Date.now();
             const offset = isLeftClock ? OFFSET_MSK : OFFSET_MSK + (MS_IN_DAY / 2);
@@ -386,14 +439,8 @@
                 const tz = card.dataset.tz;
                 if (!tz) return;
                 const isHighlight = card.classList.contains('highlight');
-                const timeStr = now.toLocaleTimeString('pt-BR', {
-                    timeZone: tz, hour: '2-digit', minute: '2-digit',
-                    second: isHighlight ? '2-digit' : undefined, hour12: false
-                });
-                const dateStr = now.toLocaleDateString('pt-BR', {
-                    timeZone: tz, day: '2-digit', month: '2-digit',
-                    year: isHighlight ? 'numeric' : undefined
-                });
+                const timeStr = now.toLocaleTimeString('pt-BR', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: isHighlight ? '2-digit' : undefined, hour12: false });
+                const dateStr = now.toLocaleDateString('pt-BR', { timeZone: tz, day: '2-digit', month: '2-digit', year: isHighlight ? 'numeric' : undefined });
                 card.querySelector('.time').textContent = timeStr;
                 const dateEl = card.querySelector('.date');
                 if (dateEl) dateEl.textContent = dateStr;
@@ -412,6 +459,8 @@
 
         setInterval(updateClocks, 1000);
         updateClocks();
+        fetchBossData();
+        setInterval(fetchBossData, 600000); // Update boss data every 10 mins
     </script>
 </body>
 </html>
