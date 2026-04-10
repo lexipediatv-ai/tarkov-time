@@ -115,8 +115,6 @@
         }
         .boss-hero::-webkit-scrollbar { display: none; }
 
-        .boss-link { text-decoration: none; display: flex; }
-
         .boss-card {
             width: 155px;
             background: rgba(255, 255, 255, 0.015);
@@ -153,11 +151,9 @@
             width: 100%;
             height: 100px;
             object-fit: cover;
-            border-top: 1px solid var(--text-muted);
             opacity: 0.7;
             transition: var(--transition);
         }
-        .boss-avatar.dual { width: 50%; }
         .boss-card:hover .boss-avatar { opacity: 1; filter: grayscale(0); }
 
         /* Clocks */
@@ -283,29 +279,32 @@
                     if (!TARGET_BOSSES.includes(name) && !["The Goons", "Cultistas", "Kaban & Kollontay"].includes(displayName)) return;
 
                     if (!bossMap[displayName]) {
-                        const meta = bossesMeta.find(m => m.name === name) || {};
                         bossMap[displayName] = { 
                             name: displayName, 
-                            wiki: `https://escapefromtarkov.fandom.com/wiki/${wikiName}`,
-                            imgs: [meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`],
+                            profiles: [], // List of { img, wiki }
                             spawns: [] 
                         };
-                    } else if (["Kaban & Kollontay"].includes(displayName)) {
-                        const meta = bossesMeta.find(m => m.name === name) || {};
-                        const img = meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`;
-                        if (!bossMap[displayName].imgs.includes(img)) bossMap[displayName].imgs.push(img);
                     }
+
+                    const meta = bossesMeta.find(m => m.name === name) || {};
+                    const img = meta.imagePortraitLink || `https://assets.tarkov.dev/${name.toLowerCase().replace(/ /g, '-')}-portrait.png`;
+                    const wiki = `https://escapefromtarkov.fandom.com/wiki/${name.replace(/ /g, '_')}`;
+
+                    if (!bossMap[displayName].profiles.find(p => p.img === img)) {
+                        bossMap[displayName].profiles.push({ img, wiki });
+                    }
+
                     if (!bossMap[displayName].spawns.find(s => s.mapName === map.name)) {
                         bossMap[displayName].spawns.push({ mapName: map.name, chance: sb.spawnChance });
                     }
                 });
             });
 
-            Object.values(bossMap).sort((a,b) => Math.max(...b.spawns.map(s => s.chance)) - Math.max(...a.spawns.map(s => s.chance))).forEach(boss => {
-                const link = document.createElement('a');
-                link.className = 'boss-link';
-                link.href = boss.wiki;
-                link.target = '_blank';
+            const sortedBosses = Object.values(bossMap).sort((a,b) => Math.max(...b.spawns.map(s => s.chance)) - Math.max(...a.spawns.map(s => s.chance)));
+
+            sortedBosses.forEach(boss => {
+                const card = document.createElement('div');
+                card.className = 'boss-card';
                 
                 let spawnsHTML = boss.spawns.map(s => `
                     <div class="boss-spawn-item">
@@ -317,18 +316,21 @@
                     </div>
                 `).join('');
 
-                let imgHTML = boss.imgs.map(img => `<img src="${img}" class="boss-avatar ${boss.imgs.length > 1 ? 'dual' : ''}" loading="lazy">`).join('');
+                const profileCount = boss.profiles.length;
+                let profilesHTML = boss.profiles.map(p => `
+                    <a href="${p.wiki}" target="_blank" style="flex:1; display:flex;">
+                        <img src="${p.img}" class="boss-avatar" style="width:100%;" loading="lazy">
+                    </a>
+                `).join('');
 
-                link.innerHTML = `
-                    <div class="boss-card">
-                        <div>
-                            <div class="boss-name">${boss.name}</div>
-                            <div class="spawn-list">${spawnsHTML}</div>
-                        </div>
-                        <div style="display:flex; ${boss.imgs.length > 1 ? 'gap:2px;' : ''}">${imgHTML}</div>
+                card.innerHTML = `
+                    <div>
+                        <div class="boss-name">${boss.name}</div>
+                        <div class="spawn-list">${spawnsHTML}</div>
                     </div>
+                    <div style="display:flex; justify-content:center; border-top: 1px solid var(--text-muted);">${profilesHTML}</div>
                 `;
-                container.appendChild(link);
+                container.appendChild(card);
             });
         }
 
