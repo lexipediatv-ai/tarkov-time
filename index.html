@@ -48,6 +48,7 @@
             font-weight: 800;
             background: linear-gradient(to right, #38bdf8, #22c55e);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
         }
@@ -58,7 +59,7 @@
             grid-template-areas: 
                 "hero hero hero hero"
                 "c1 c2 c3 c4"
-                "c5 c6 c7 .";
+                "c5 c6 c7 c8";
             grid-template-rows: 1.2fr 1fr 1fr;
             grid-template-columns: repeat(4, 1fr);
             gap: 1.5vh;
@@ -263,13 +264,54 @@
             <div class="time">--:--</div>
             <div class="date">--/--</div>
         </div>
+
+        <div class="card tarkov-card" style="grid-area: c8;">
+            <div class="region-label" style="color: #f59e0b;">Escape from Tarkov</div>
+            <div class="tarkov-containers" style="display: flex; gap: 15px; width: 100%; justify-content: center; margin-top: 5px;">
+                <div class="tarkov-clock" id="tarkov-left" style="text-align: center;">
+                    <div class="city-name" style="font-size: 0.8rem;">Alpha</div>
+                    <div class="time" style="font-size: 1.5rem; margin: 0;">--:--</div>
+                    <div class="status" style="font-size: 0.6rem; opacity: 0.7;">--</div>
+                </div>
+                <div style="width: 1px; background: rgba(255,255,255,0.1); align-self: stretch;"></div>
+                <div class="tarkov-clock" id="tarkov-right" style="text-align: center;">
+                    <div class="city-name" style="font-size: 0.8rem;">Beta</div>
+                    <div class="time" style="font-size: 1.5rem; margin: 0;">--:--</div>
+                    <div class="status" style="font-size: 0.6rem; opacity: 0.7;">--</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        const TARKOV_RATIO = 7;
+        const MS_IN_DAY = 86400000;
+        const OFFSET_MSK = 10800000; // 3 hours in ms
+
+        function getTarkovTime(isLeftClock = true) {
+            const now = Date.now();
+            const offset = isLeftClock ? OFFSET_MSK : OFFSET_MSK + (MS_IN_DAY / 2);
+            const tarkovMs = (offset + (now * TARKOV_RATIO)) % MS_IN_DAY;
+            
+            const hours = Math.floor(tarkovMs / (60 * 60 * 1000));
+            const minutes = Math.floor((tarkovMs % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((tarkovMs % (60 * 1000)) / 1000);
+
+            const isDay = hours >= 6 && hours < 18;
+            
+            return {
+                time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+                status: isDay ? "☀️ DIA" : "🌙 NOITE",
+                isDay: isDay
+            };
+        }
+
         function updateClocks() {
             const now = new Date();
-            document.querySelectorAll('.card').forEach(card => {
+            document.querySelectorAll('.card:not(.tarkov-card)').forEach(card => {
                 const tz = card.dataset.tz;
+                if (!tz) return;
+
                 const isHighlight = card.classList.contains('highlight');
                 
                 const timeStr = now.toLocaleTimeString('pt-BR', {
@@ -290,6 +332,21 @@
                 card.querySelector('.time').textContent = timeStr;
                 card.querySelector('.date').textContent = dateStr;
             });
+
+            // Update Tarkov
+            const left = getTarkovTime(true);
+            const right = getTarkovTime(false);
+
+            const leftEl = document.getElementById('tarkov-left');
+            const rightEl = document.getElementById('tarkov-right');
+
+            leftEl.querySelector('.time').textContent = left.time;
+            leftEl.querySelector('.status').textContent = left.status;
+            leftEl.querySelector('.status').style.color = left.isDay ? '#fbbf24' : '#6366f1';
+
+            rightEl.querySelector('.time').textContent = right.time;
+            rightEl.querySelector('.status').textContent = right.status;
+            rightEl.querySelector('.status').style.color = right.isDay ? '#fbbf24' : '#6366f1';
         }
 
         setInterval(updateClocks, 1000);
