@@ -388,33 +388,57 @@
             mapsData.forEach(map => {
                 map.bosses.forEach(sb => {
                     let name = sb.boss.name;
-                    if (["Knight", "Big Pipe", "Birdeye"].includes(name)) name = "The Goons";
-                    if (!TARGET_BOSSES.includes(name)) return;
-
-                    if (!bossMap[name]) {
-                        bossMap[name] = { name, maps: new Set(), maxChance: 0 };
+                    let displayName = name;
+                    
+                    // Grouping Goons
+                    if (["Knight", "Big Pipe", "Birdeye"].includes(name)) {
+                        displayName = "The Goons (Knight/Birdeye/Big Pipe)";
                     }
                     
-                    bossMap[name].maps.add(map.name);
-                    if (sb.spawnChance > bossMap[name].maxChance) {
-                        bossMap[name].maxChance = sb.spawnChance;
+                    if (!TARGET_BOSSES.includes(name) && displayName !== "The Goons (Knight/Birdeye/Big Pipe)") return;
+
+                    if (!bossMap[displayName]) {
+                        bossMap[displayName] = { name: displayName, spawns: [] };
+                    }
+                    
+                    // Check if map already added for this boss group
+                    const existingMap = bossMap[displayName].spawns.find(s => s.mapName === map.name);
+                    if (!existingMap) {
+                        bossMap[displayName].spawns.push({
+                            mapName: map.name,
+                            chance: sb.spawnChance
+                        });
                     }
                 });
             });
 
-            Object.values(bossMap).sort((a,b) => b.maxChance - a.maxChance).forEach(boss => {
-                const pct = Math.round(boss.maxChance * 100);
+            // Sort by max spawn chance found in any map
+            const sortedBosses = Object.values(bossMap).sort((a, b) => {
+                const maxA = Math.max(...a.spawns.map(s => s.chance));
+                const maxB = Math.max(...b.spawns.map(s => s.chance));
+                return maxB - maxA;
+            });
+
+            sortedBosses.forEach(boss => {
                 const item = document.createElement('div');
                 item.className = 'boss-item';
+                
+                let spawnsHTML = boss.spawns.map(s => {
+                    const pct = Math.round(s.chance * 100);
+                    return `
+                        <div style="margin-top: 8px;">
+                            <div class="boss-info">
+                                <span class="map-tag" style="background:rgba(255,255,255,0.1); color:var(--foreground); padding:2px 8px;">${s.mapName}</span>
+                                <span class="boss-pct">${pct}%</span>
+                            </div>
+                            <div class="spawn-bar"><div class="spawn-progress" style="width: ${pct}%"></div></div>
+                        </div>
+                    `;
+                }).join('');
+
                 item.innerHTML = `
-                    <div class="boss-info">
-                        <span class="boss-name">${boss.name}</span>
-                        <span class="boss-pct">${pct}%</span>
-                    </div>
-                    <div class="spawn-bar"><div class="spawn-progress" style="width: ${pct}%"></div></div>
-                    <div class="boss-maps">
-                        ${Array.from(boss.maps).map(m => `<span class="map-tag">${m}</span>`).join('')}
-                    </div>
+                    <div class="boss-name" style="margin-bottom:4px; font-size:0.75rem;">${boss.name}</div>
+                    ${spawnsHTML}
                 `;
                 container.appendChild(item);
             });
