@@ -41,7 +41,6 @@
             position: relative;
         }
 
-        /* Hero Background Effects from DS */
         .hero-bg {
             position: absolute;
             inset: 0;
@@ -49,7 +48,7 @@
             pointer-events: none;
             z-index: -1;
         }
-        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; }
         .orb-1 { width: 500px; height: 500px; top: -10%; left: -5%; background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%); }
         .orb-2 { width: 400px; height: 400px; bottom: -10%; right: -5%; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); }
         .grid-lines {
@@ -63,7 +62,7 @@
         }
 
         header {
-            margin-bottom: 2.5vh;
+            margin-bottom: 2vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -72,7 +71,7 @@
 
         .logo {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             letter-spacing: -1px;
             display: flex;
@@ -88,17 +87,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .logo-box {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, var(--accent-primary), #2dd4bf);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-
         .dashboard {
             flex: 1;
             display: grid;
@@ -108,7 +96,7 @@
                 "c5 c6 c7 c8";
             grid-template-rows: 1fr 0.9fr 0.9fr;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5vh 1.5vw;
+            gap: 1.5vh 1.2vw;
             max-width: 1600px;
             margin: 0 auto;
             width: 100%;
@@ -119,22 +107,19 @@
             background: var(--surface);
             border: 1px solid var(--card-border);
             border-radius: 20px;
-            padding: 1.8vh 1.8vw;
+            padding: 1.5vh 1.5vw;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             transition: var(--transition);
-            position: relative;
         }
 
         .card:hover {
             transform: translateY(-2px);
             border-color: rgba(255, 255, 255, 0.1);
             background: var(--surface-accent);
-            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
         }
 
-        /* Hero Card Style */
         .card.highlight {
             grid-area: hero;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), var(--surface));
@@ -145,79 +130,54 @@
             padding: 0 5vw;
         }
 
-        .card.highlight:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-            box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.15);
-        }
-
-        /* Typography DS */
         .label {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 800;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.15em;
             opacity: 0.6;
+            line-height: 1.2;
         }
 
         .city {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--foreground);
             letter-spacing: -0.01em;
         }
 
         .time {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: var(--foreground);
             font-variant-numeric: tabular-nums;
             line-height: 1;
-            margin: 0.5vh 0;
-            letter-spacing: -0.02em;
+            margin: 0.3vh 0;
         }
 
         .date {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
-        /* Highlight Specifics */
-        .highlight .city { font-size: 1.5rem; font-family: 'Montserrat', sans-serif; font-weight: 900; }
+        .highlight .city { font-size: 1.4rem; font-family: 'Montserrat', sans-serif; font-weight: 900; }
         .highlight .time { 
-            font-size: 5rem; 
+            font-size: 4.8rem; 
             font-weight: 900;
             background: linear-gradient(to right, #6366f1, #2dd4bf);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
         }
-        .highlight .date { font-size: 1rem; color: var(--text-secondary); }
 
-        /* Multi-location */
-        .multi-group { display: flex; flex-direction: column; gap: 6px; }
-        .sub-loc { display: flex; align-items: baseline; gap: 8px; }
+        .multi-group { display: flex; flex-direction: column; gap: 4px; }
+        .sub-loc { display: flex; flex-direction: column; }
 
-        /* Tarkov Card */
-        .tarkov-card {
-            border-color: rgba(245, 158, 11, 0.15);
-        }
-        .tarkov-title {
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--accent-warning);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1vh;
-        }
-        .tarkov-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            height: 100%;
-        }
+        .tarkov-card { border-color: rgba(245, 158, 11, 0.15); }
+        .tarkov-title { font-size: 0.6rem; font-weight: 800; color: var(--accent-warning); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.8vh; display: block; text-align: center;}
+        .tarkov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 100%; }
         .tarkov-item {
             display: flex;
             flex-direction: column;
@@ -225,28 +185,14 @@
             align-items: center;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
-            padding: 8px;
+            padding: 6px;
             border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: var(--transition);
         }
-        .tarkov-item:hover { background: rgba(255, 255, 255, 0.05); }
-        .tarkov-item .time { font-size: 1.8rem; margin: 4px 0; }
-        .tarkov-item .status { 
-            font-size: 0.6rem; 
-            font-weight: 800; 
-            letter-spacing: 0.05em;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: rgba(0, 0, 0, 0.2);
-        }
+        .tarkov-item .time { font-size: 1.6rem; margin: 2px 0; }
+        .tarkov-item .status { font-size: 0.55rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; background: rgba(0, 0, 0, 0.3); }
 
         @media (max-width: 1200px) {
-            .dashboard {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-areas: "hero hero" "c1 c2" "c3 c4" "c5 c6" "c7 c8";
-                overflow-y: auto;
-                grid-template-rows: auto;
-            }
+            .dashboard { grid-template-columns: repeat(2, 1fr); grid-template-areas: "hero hero" "c1 c2" "c3 c4" "c5 c6" "c7 c8"; grid-template-rows: auto; overflow-y: auto; }
             body { overflow-y: auto; height: auto; }
         }
     </style>
@@ -260,98 +206,89 @@
     </div>
 
     <header>
-        <div class="logo">
-            <div class="logo-box">
-                <svg viewBox="0 0 24 24" width="14" height="14" stroke="white" stroke-width="4" fill="none"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-            </div>
-            <span>Global Pulse</span>
-        </div>
+        <div class="logo"><span>Global Pulse</span></div>
     </header>
 
     <div class="dashboard">
         <!-- BRASIL - PRIMARY -->
         <div class="card highlight" data-tz="America/Sao_Paulo">
             <div class="meta">
-                <div class="label">Operational Center</div>
+                <div class="label">South America</div>
                 <div class="city">Brasília, BR</div>
                 <div class="date">--/--/----</div>
             </div>
             <div class="time">--:--:--</div>
         </div>
 
-        <!-- C1 -->
+        <!-- C1: EUROPE WEST -->
         <div class="card" style="grid-area: c1;" data-tz="Europe/London">
+            <div class="meta">
+                <div class="label">Europe</div>
+                <div class="city">West (London)</div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <!-- C2: EUROPE CENTRAL/NORTH/SOUTH -->
+        <div class="card" style="grid-area: c2;" data-tz="Europe/Berlin">
+            <div class="meta">
+                <div class="label">Europe</div>
+                <div class="city">Cen/North/South</div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <!-- C3: EUROPE EAST / AFRICA / RUSSIA WEST -->
+        <div class="card" style="grid-area: c3;" data-tz="Europe/Bucharest">
             <div class="multi-group">
-                <div class="sub-loc"><span class="label">EUW</span><span class="city">London</span></div>
-                <div class="sub-loc"><span class="label">AFR</span><span class="city">Abuja</span></div>
+                <div class="sub-loc"><span class="label">Europe East / Africa</span><span class="city">Cai/Buc/Kal</span></div>
             </div>
             <div class="time">--:--</div>
             <div class="date">--/--</div>
         </div>
 
-        <!-- C2 -->
-        <div class="card" style="grid-area: c2;" data-tz="America/Bogota">
+        <!-- C4: RUSSIA CENTRAL/EAST -->
+        <div class="card" style="grid-area: c4;" data-tz="Europe/Moscow">
             <div class="multi-group">
-                <div class="sub-loc"><span class="label">COL</span><span class="city">Bogotá</span></div>
-                <div class="sub-loc"><span class="label">CAM</span><span class="city">Panamá</span></div>
+                <div class="sub-loc"><span class="label">Russia</span><span class="city">Central / East</span></div>
             </div>
             <div class="time">--:--</div>
             <div class="date">--/--</div>
         </div>
 
-        <!-- C3 -->
-        <div class="card" style="grid-area: c3;" data-tz="America/New_York">
+        <!-- C5: NA WEST -->
+        <div class="card" style="grid-area: c5;" data-tz="America/Los_Angeles">
+            <div class="meta">
+                <div class="label">North America</div>
+                <div class="city">West Coast</div>
+            </div>
+            <div class="time">--:--</div>
+            <div class="date">--/--</div>
+        </div>
+
+        <!-- C6: NA CENTRAL / MEXICO -->
+        <div class="card" style="grid-area: c6;" data-tz="America/Chicago">
             <div class="multi-group">
-                <div class="sub-loc"><span class="label">NET</span><span class="city">New York</span></div>
-                <div class="sub-loc"><span class="label">NAS</span><span class="city">Miami</span></div>
+                <div class="sub-loc"><span class="label">NA Central / South</span><span class="city">Chicago / Mexico</span></div>
             </div>
             <div class="time">--:--</div>
             <div class="date">--/--</div>
         </div>
 
-        <!-- C4 -->
-        <div class="card" style="grid-area: c4;" data-tz="America/Mexico_City">
-            <div class="meta">
-                <div class="label">Mexico</div>
-                <div class="city">CDMX</div>
+        <!-- C7: NA NORTH/EAST / COLOMBIA -->
+        <div class="card" style="grid-area: c7;" data-tz="America/New_York">
+            <div class="multi-group">
+                <div class="sub-loc"><span class="label">NA North/East / Colombia</span><span class="city">NYC/Toronto/Bogotá</span></div>
             </div>
             <div class="time">--:--</div>
             <div class="date">--/--</div>
         </div>
 
-        <!-- C5 -->
-        <div class="card" style="grid-area: c5;" data-tz="Africa/Cairo">
-            <div class="meta">
-                <div class="label">North Africa</div>
-                <div class="city">Cairo</div>
-            </div>
-            <div class="time">--:--</div>
-            <div class="date">--/--</div>
-        </div>
-
-        <!-- C6 -->
-        <div class="card" style="grid-area: c6;" data-tz="America/Los_Angeles">
-            <div class="meta">
-                <div class="label">US West</div>
-                <div class="city">Los Angeles</div>
-            </div>
-            <div class="time">--:--</div>
-            <div class="date">--/--</div>
-        </div>
-
-        <!-- C7 -->
-        <div class="card" style="grid-area: c7;" data-tz="Europe/Moscow">
-            <div class="meta">
-                <div class="label">Russia</div>
-                <div class="city">Moscow</div>
-            </div>
-            <div class="time">--:--</div>
-            <div class="date">--/--</div>
-        </div>
-
-        <!-- C8: TARKOV (ALPHA/BETA REMOVED) -->
+        <!-- C8: TARKOV -->
         <div class="card tarkov-card" style="grid-area: c8;">
-            <div class="tarkov-title">Tarkov Engine</div>
+            <span class="tarkov-title">Tarkov Engine</span>
             <div class="tarkov-grid">
                 <div class="tarkov-item" id="tarkov-left">
                     <span class="time">--:--</span>
@@ -374,12 +311,9 @@
             const now = Date.now();
             const offset = isLeftClock ? OFFSET_MSK : OFFSET_MSK + (MS_IN_DAY / 2);
             const tarkovMs = (offset + (now * TARKOV_RATIO)) % MS_IN_DAY;
-            
             const hours = Math.floor(tarkovMs / (60 * 60 * 1000));
             const minutes = Math.floor((tarkovMs % (60 * 60 * 1000)) / (60 * 1000));
-            
             const isDay = hours >= 6 && hours < 18;
-            
             return {
                 time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
                 status: isDay ? "DAYTIME" : "NIGHT",
@@ -392,40 +326,26 @@
             document.querySelectorAll('.card:not(.tarkov-card)').forEach(card => {
                 const tz = card.dataset.tz;
                 if (!tz) return;
-
                 const isHighlight = card.classList.contains('highlight');
-                
                 const timeStr = now.toLocaleTimeString('pt-BR', {
-                    timeZone: tz,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: isHighlight ? '2-digit' : undefined,
-                    hour12: false
+                    timeZone: tz, hour: '2-digit', minute: '2-digit',
+                    second: isHighlight ? '2-digit' : undefined, hour12: false
                 });
-
                 const dateStr = now.toLocaleDateString('pt-BR', {
-                    timeZone: tz,
-                    day: '2-digit',
-                    month: '2-digit',
+                    timeZone: tz, day: '2-digit', month: '2-digit',
                     year: isHighlight ? 'numeric' : undefined
                 });
-
                 card.querySelector('.time').textContent = timeStr;
                 const dateEl = card.querySelector('.date');
                 if (dateEl) dateEl.textContent = dateStr;
             });
-
-            // Update Tarkov
             const left = getTarkovTime(true);
             const right = getTarkovTime(false);
-
             const leftEl = document.getElementById('tarkov-left');
             const rightEl = document.getElementById('tarkov-right');
-
             leftEl.querySelector('.time').textContent = left.time;
             leftEl.querySelector('.status').textContent = left.status;
             leftEl.querySelector('.status').style.color = left.isDay ? '#fbbf24' : '#6366f1';
-
             rightEl.querySelector('.time').textContent = right.time;
             rightEl.querySelector('.status').textContent = right.status;
             rightEl.querySelector('.status').style.color = right.isDay ? '#fbbf24' : '#6366f1';
